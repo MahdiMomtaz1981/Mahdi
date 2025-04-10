@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>مدیریت سرمایه مهدی ممتاز</title>
+  <style>
+    body {
+      font-family: 'Vazir', sans-serif;
+      direction: rtl;
+      background: #f3f4f6;
+      padding: 2rem;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .title-main {
+      font-family: 'Vazir', sans-serif;
+      font-size: 1.2rem;
+      text-align: center;
+      color: #374151;
+    }
+
+    .title-name {
+      font-family: 'Shabnam', sans-serif;
+      font-size: 2rem;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: #1e3a8a;
+    }
+
+    .quote {
+      text-align: center;
+      font-size: 1.1rem;
+      color: #4b5563;
+      margin-bottom: 2rem;
+    }
+
+    .quote span {
+      font-size: 1.4rem;
+      color: #d4af37;
+      font-weight: bold;
+    }
+
+    label, input, select {
+      display: block;
+      width: 100%;
+      margin-bottom: 1rem;
+    }
+
+    input, select {
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      padding: 0.7rem 1.5rem;
+      border: none;
+      border-radius: 0.5rem;
+      background: #10b981;
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #059669;
+    }
+
+    .result {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background: #e0f2fe;
+      border-radius: 0.5rem;
+    }
+  </style>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <div class="title-main">مدیریت سرمایه و ریسک اختصاصی</div>
+    <div class="title-name">مهدی ممتاز</div>
+
+    <div class="quote">
+      <p>اگر می‌خواهید بر یک مهارت مسلط شوید،</p>
+      <p>بگذار آن مهارت <span>صبر</span> باشد.</p>
+    </div>
+
+    <label>سرمایه کل ($):
+      <input type="number" id="balance" value="1000">
+    </label>
+
+    <label>نوع مشخص‌کردن ریسک:
+      <select id="riskType" onchange="toggleRiskInputs()">
+        <option value="percent">درصدی (%)</option>
+        <option value="dollar">دلاری ($)</option>
+      </select>
+    </label>
+
+    <label id="percentLabel">درصد ریسک (%):
+      <input type="number" id="riskPercent" value="2">
+    </label>
+
+    <label id="dollarLabel" style="display:none;">مقدار ریسک دلاری ($):
+      <input type="number" id="riskDollarInput" value="20">
+    </label>
+
+    <label>استاپ‌لاس (پیپ):
+      <input type="number" id="stopLoss" value="30">
+    </label>
+
+    <label>ارزش هر پیپ در یک لات ($):
+      <input type="number" id="pipValue" value="10">
+    </label>
+
+    <button onclick="calculate()">محاسبه</button>
+
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    function toggleRiskInputs() {
+      const type = document.getElementById("riskType").value;
+      document.getElementById("percentLabel").style.display = type === "percent" ? "block" : "none";
+      document.getElementById("dollarLabel").style.display = type === "dollar" ? "block" : "none";
+    }
+
+    function calculate() {
+      const balance = parseFloat(document.getElementById('balance').value);
+      const riskType = document.getElementById('riskType').value;
+      const stopLoss = parseFloat(document.getElementById('stopLoss').value);
+      const pipValue = parseFloat(document.getElementById('pipValue').value);
+
+      let riskDollar = 0;
+
+      if (riskType === "percent") {
+        const riskPercent = parseFloat(document.getElementById('riskPercent').value);
+        riskDollar = (balance * riskPercent) / 100;
+      } else {
+        riskDollar = parseFloat(document.getElementById('riskDollarInput').value);
+      }
+
+      const lotSize = riskDollar / (stopLoss * pipValue);
+
+      document.getElementById('result').innerHTML = `
+        <strong>ریسک دلاری:</strong> ${riskDollar.toFixed(2)} دلار <br>
+        <strong>حجم پوزیشن مناسب:</strong> ${lotSize.toFixed(3)} لات
+      `;
+    }
+  </script>
+</body>
+</html>
